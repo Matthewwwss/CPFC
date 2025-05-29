@@ -1,0 +1,45 @@
+.app-container {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 24px;
+    padding-bottom: 180px; /* Space for the assistant interface */
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .app-container {
+        padding: 16px;
+        padding-bottom: 180px;
+    }
+}
+
+body {
+    background-color: #121212;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Card backgrounds - simplified, neutral dark colors */
+.form-card {
+    background: #1e1e24 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+.results-card {
+    background: #1e1e24 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Use green only for active elements and accents */
+.accent-color {
+    color: #2ecc71 !important;
+}
+
+.accent-border:focus-within {
+    border-color: #2ecc71 !important;
+}
