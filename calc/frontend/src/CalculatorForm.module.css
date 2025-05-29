@@ -1,0 +1,129 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    max-width: 1440px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+  
+  .title {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 2rem;
+  }
+  
+  .form {
+    width: 100%;
+    padding: 30px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background: white;
+    margin-bottom: 30px;
+  }
+  
+  .results {
+    width: 100%;
+    padding: 30px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background: white;
+  }
+  
+  .formGroup {
+    margin-bottom: 20px;
+  }
+  
+  .label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .buttonGroup {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 5px;
+  }
+  
+  .button {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+    font-size: 0.9rem;
+  }
+  
+  .buttonActive {
+    composes: button;
+    background-color: #6200ee;
+    color: white;
+    border-color: #6200ee;
+  }
+  
+  .input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
+  
+  .submitButton {
+    padding: 12px 20px;
+    background-color: #6200ee;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    width: 100%;
+    margin-top: 20px;
+    font-size: 1rem;
+  }
+  
+  .resultTitle {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+  }
+  
+  .resultItem {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .resultLabel {
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .resultValue {
+    font-weight: 600;
+    color: #6200ee;
+  }
+  
+  @media (min-width: 768px) {
+    .container {
+      padding: 40px;
+    }
+    
+    .form, .results {
+      padding: 40px;
+    }
+    
+    .title {
+      font-size: 2.5rem;
+    }
+  }
