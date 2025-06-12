@@ -308,11 +308,6 @@ export class App extends React.Component<Record<string, never>, AppState> {
 
   private setFeedbackMessage(message: string): void {
     this.setState({ feedbackMessage: message });
-
-    // Clear feedback after delay
-    setTimeout(() => {
-      this.setState({ feedbackMessage: null });
-    }, 3000);
   }
 
   // Calculator methods
