@@ -52,33 +52,31 @@ const RadioWrapper = styled.div`
 
 const RadioContainer = styled.div`
   display: flex;
-  align-items: flex-start; // Align from the top instead
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 24px;
   margin-top: 8px;
 
-  /* Add this to ensure all radioboxes align properly */
   & > div,
   & > label {
     display: flex !important;
     align-items: center !important;
-    height: 24px !important; /* Set a consistent height */
+    height: 24px !important;
   }
 `;
 
 const GoalRadioContainer = styled.div`
   display: flex;
-  align-items: flex-start; // Align from the top instead
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 16px;
   margin-top: 8px;
 
-  /* Add this to ensure all radioboxes align properly */
   & > div,
   & > label {
     display: flex !important;
     align-items: center !important;
-    height: 24px !important; /* Set a consistent height */
+    height: 24px !important;
   }
 
   @media (max-width: 768px) {
@@ -167,12 +165,32 @@ export const CalculatorForm = ({
   onCalculate,
   feedbackMessage,
 }: CalculatorFormProps) => {
-  const [localFormData, setLocalFormData] =
-    useState<CalculatorFormData>(formData);
+  const [localFormData, setLocalFormData] = useState<CalculatorFormData>(formData);
 
   useEffect(() => {
     setLocalFormData(formData);
   }, [formData]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    const inputs = Array.from(document.querySelectorAll('input, button'));
+    const currentIndex = inputs.indexOf(document.activeElement as HTMLElement);
+    
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const nextIndex = currentIndex + 1;
+      if (nextIndex < inputs.length) {
+        (inputs[nextIndex] as HTMLElement).focus();
+      }
+    }
+    
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prevIndex = currentIndex - 1;
+      if (prevIndex >= 0) {
+        (inputs[prevIndex] as HTMLElement).focus();
+      }
+    }
+  };
 
   const handleChange = <K extends keyof CalculatorFormData>(
     key: K,
@@ -188,14 +206,11 @@ export const CalculatorForm = ({
     onCalculate();
   };
 
-  // Handle empty input by allowing user to clear the field
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: "age" | "height" | "weight",
   ) => {
     const value = e.target.value;
-
-    // Allow empty value or valid number
     if (value === "" || /^\d+$/.test(value)) {
       handleChange(field, value === "" ? 0 : Number(value));
     }
@@ -208,7 +223,7 @@ export const CalculatorForm = ({
       {feedbackMessage && <FeedbackMessage>{feedbackMessage}</FeedbackMessage>}
 
       <FormCard>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
           <Row>
             <Col size={12}>
               <FormGroup>
