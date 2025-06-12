@@ -351,8 +351,8 @@ export class App extends React.Component<Record<string, never>, AppState> {
       };
 
       const protein = goal === "gain" ? 2.5 * weight : 1.8 * weight;
-      const fats = 1 * weight;
-      const carbs = (mifflin - (protein * 4 + fats * 9)) / 4;
+      const fats = (mifflin * 0.2) / 9;
+      const carbs = (mifflin * 0.5) / 4;
 
       const newResults = { mifflin, harris, weightBased, protein, fats, carbs };
 
