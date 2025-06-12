@@ -48,6 +48,18 @@ const RadioWrapper = styled.div`
   display: flex;
   align-items: center;
   height: 24px;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:focus-within {
+    outline: 2px solid #2ecc71;
+    outline-offset: 2px;
+  }
+
+  &:hover {
+    background-color: rgba(46, 204, 113, 0.1);
+  }
 `;
 
 const RadioContainer = styled.div`
@@ -97,9 +109,22 @@ const SubmitButton = styled(Button)`
   margin-top: 32px;
   height: 52px;
   background-color: #2ecc71;
+  transition: all 0.2s ease;
 
   &:hover {
     background-color: #27ae60;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.4);
+  }
+
+  &:focus {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.4);
   }
 `;
 
@@ -172,23 +197,32 @@ export const CalculatorForm = ({
   }, [formData]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    const inputs = Array.from(document.querySelectorAll('input, button'));
-    const currentIndex = inputs.indexOf(document.activeElement as HTMLElement);
+    const focusableElements = Array.from(
+      document.querySelectorAll('input, button')
+    );
+    const currentIndex = focusableElements.indexOf(document.activeElement as HTMLElement);
     
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      const nextIndex = currentIndex + 1;
-      if (nextIndex < inputs.length) {
-        (inputs[nextIndex] as HTMLElement).focus();
-      }
-    }
-    
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      const prevIndex = currentIndex - 1;
-      if (prevIndex >= 0) {
-        (inputs[prevIndex] as HTMLElement).focus();
-      }
+    switch (e.key) {
+      case 'ArrowDown':
+      case 'ArrowRight':
+        e.preventDefault();
+        const nextIndex = (currentIndex + 1) % focusableElements.length;
+        (focusableElements[nextIndex] as HTMLElement).focus();
+        break;
+      
+      case 'ArrowUp':
+      case 'ArrowLeft':
+        e.preventDefault();
+        const prevIndex = currentIndex <= 0 ? focusableElements.length - 1 : currentIndex - 1;
+        (focusableElements[prevIndex] as HTMLElement).focus();
+        break;
+
+      case 'Enter':
+        if (e.target instanceof HTMLInputElement && e.target.type === 'radio') {
+          e.preventDefault();
+          e.target.click();
+        }
+        break;
     }
   };
 
@@ -234,6 +268,7 @@ export const CalculatorForm = ({
                       label="Мужской"
                       checked={localFormData.gender === "male"}
                       onChange={() => handleChange("gender", "male")}
+                      tabIndex={0}
                     />
                   </RadioWrapper>
                   <RadioWrapper>
@@ -241,6 +276,7 @@ export const CalculatorForm = ({
                       label="Женский"
                       checked={localFormData.gender === "female"}
                       onChange={() => handleChange("gender", "female")}
+                      tabIndex={1}
                     />
                   </RadioWrapper>
                 </RadioContainer>
@@ -257,6 +293,7 @@ export const CalculatorForm = ({
                   value={localFormData.age === 0 ? "" : localFormData.age}
                   onChange={(e) => handleInputChange(e, "age")}
                   placeholder="Лет"
+                  tabIndex={2}
                 />
               </FormGroup>
             </Col>
@@ -268,6 +305,7 @@ export const CalculatorForm = ({
                   value={localFormData.height === 0 ? "" : localFormData.height}
                   onChange={(e) => handleInputChange(e, "height")}
                   placeholder="См"
+                  tabIndex={3}
                 />
               </FormGroup>
             </Col>
@@ -279,6 +317,7 @@ export const CalculatorForm = ({
                   value={localFormData.weight === 0 ? "" : localFormData.weight}
                   onChange={(e) => handleInputChange(e, "weight")}
                   placeholder="Кг"
+                  tabIndex={4}
                 />
               </FormGroup>
             </Col>
@@ -294,6 +333,7 @@ export const CalculatorForm = ({
                       label="Сбросить вес"
                       checked={localFormData.goal === "lose"}
                       onChange={() => handleChange("goal", "lose")}
+                      tabIndex={5}
                     />
                   </RadioWrapper>
                   <RadioWrapper>
@@ -301,6 +341,7 @@ export const CalculatorForm = ({
                       label="Поддерживать вес"
                       checked={localFormData.goal === "maintain"}
                       onChange={() => handleChange("goal", "maintain")}
+                      tabIndex={6}
                     />
                   </RadioWrapper>
                   <RadioWrapper>
@@ -308,6 +349,7 @@ export const CalculatorForm = ({
                       label="Набрать массу"
                       checked={localFormData.goal === "gain"}
                       onChange={() => handleChange("goal", "gain")}
+                      tabIndex={7}
                     />
                   </RadioWrapper>
                 </GoalRadioContainer>
@@ -315,7 +357,12 @@ export const CalculatorForm = ({
             </Col>
           </Row>
 
-          <SubmitButton view="primary" type="submit">
+          <SubmitButton 
+            view="primary" 
+            type="submit"
+            role="button"
+            tabIndex={8}
+          >
             Рассчитать
           </SubmitButton>
         </form>
