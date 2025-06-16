@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Card,
   Button,
@@ -192,14 +192,42 @@ export const CalculatorForm = ({
 }: CalculatorFormProps) => {
   const [localFormData, setLocalFormData] = useState<CalculatorFormData>(formData);
 
+   // Реф для блока результатов
+  const resultsRef = useRef<HTMLDivElement | null>(null);
+  // Реф для первого поля (радиокнопка "Мужской")
+  const firstInputRef = useRef<HTMLInputElement | null>(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
+
   useEffect(() => {
     setLocalFormData(formData);
   }, [formData]);
 
+  // Эффект для управления фокусом
+  useEffect(() => {
+    if (results && resultsRef.current) {
+      // Фокусируемся на ResultsCard
+      resultsRef.current.focus();
+      // Через 1 секунду возвращаем фокус на первое поле
+      const timer = setTimeout(() => {
+        if (firstInputRef.current) {
+          firstInputRef.current.focus();
+        }
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [results]);
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    const focusableElements = Array.from(
-      document.querySelectorAll('input, button')
-    );
+    let focusableElements: HTMLElement[] = [];
+    if (formRef.current) {
+      focusableElements = Array.from(
+        formRef.current.querySelectorAll('input, button')
+      ) as HTMLElement[];
+    }
+    // Если есть блок результатов, добавляем его в конец списка для фокуса
+    if (results && resultsRef.current) {
+      focusableElements.push(resultsRef.current);
+    }
     const currentIndex = focusableElements.indexOf(document.activeElement as HTMLElement);
     
     switch (e.key) {
@@ -238,6 +266,11 @@ export const CalculatorForm = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onCalculate();
+    setTimeout(() => {
+      if (resultsRef.current) {
+        resultsRef.current.focus();
+      }
+    }, 0);
   };
 
   const handleInputChange = (
@@ -257,7 +290,7 @@ export const CalculatorForm = ({
       {feedbackMessage && <FeedbackMessage>{feedbackMessage}</FeedbackMessage>}
 
       <FormCard>
-        <form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
+        <form ref={formRef} onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
           <Row>
             <Col size={12}>
               <FormGroup>
@@ -369,7 +402,11 @@ export const CalculatorForm = ({
       </FormCard>
 
       {results && (
-        <ResultsCard>
+        <ResultsCard
+          ref={resultsRef as any}
+          tabIndex={-1}
+          style={{ outline: "none" }}
+        >
           <ResultsTitle>Ваши результаты</ResultsTitle>
 
           <Row>
