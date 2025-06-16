@@ -198,7 +198,7 @@ export class App extends React.Component<Record<string, never>, AppState> {
         case "set_age":
           if (action.payload && !isNaN(Number(action.payload))) {
             const newAge = Number(action.payload);
-            if (newAge > 0 && newAge < 120) {
+            if (newAge > 0 && newAge <= 120) {
               this.setState((prevState) => ({
                 calculatorState: {
                   ...prevState.calculatorState,
@@ -221,7 +221,7 @@ export class App extends React.Component<Record<string, never>, AppState> {
         case "set_height":
           if (action.payload && !isNaN(Number(action.payload))) {
             const newHeight = Number(action.payload);
-            if (newHeight > 50 && newHeight < 250) {
+            if (newHeight >= 50 && newHeight <= 250) {
               this.setState((prevState) => ({
                 calculatorState: {
                   ...prevState.calculatorState,
@@ -244,7 +244,7 @@ export class App extends React.Component<Record<string, never>, AppState> {
         case "set_weight":
           if (action.payload && !isNaN(Number(action.payload))) {
             const newWeight = Number(action.payload);
-            if (newWeight > 20 && newWeight < 300) {
+            if (newWeight >= 20 && newWeight <= 300) {
               this.setState((prevState) => ({
                 calculatorState: {
                   ...prevState.calculatorState,
