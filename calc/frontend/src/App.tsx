@@ -325,6 +325,7 @@ export class App extends React.Component<Record<string, never>, AppState> {
       const { gender, age, height, weight, goal } =
         this.state.calculatorState.formData;
 
+      // Calculate all values
       const mifflin =
         gender === "male"
           ? 10 * weight + 6.25 * height - 5 * age + 5
@@ -356,25 +357,40 @@ export class App extends React.Component<Record<string, never>, AppState> {
 
       const newResults = { mifflin, harris, weightBased, protein, fats, carbs };
 
-      this.setState((prevState) => ({
-        calculatorState: {
-          ...prevState.calculatorState,
-          results: newResults,
+      // Update state with callback to ensure assistant gets fresh data
+      this.setState(
+        (prevState) => ({
+          calculatorState: {
+            ...prevState.calculatorState,
+            results: newResults,
+          },
+        }),
+        () => {
+          // This callback runs after state is updated
+          if (this.assistant) {
+            const voiceSummary =
+              `Ваша суточная норма калорий по формуле Миффлина составляет ${Math.round(mifflin)} килокалорий. ` +
+              `Рекомендуемое количество белков: ${Math.round(protein)} грамм, ` +
+              `жиров: ${Math.round(fats)} грамм, ` +
+              `углеводов: ${Math.round(carbs)} грамм.`;
+
+            // Send results to assistant for voice response
+            this.sendActionValue("calculation_complete", voiceSummary);
+            this.setFeedbackMessage("Расчет выполнен!");
+
+            logger.log("Results sent to assistant:", voiceSummary);
+          }
         },
-      }));
-
-      // Send results to assistant
-      if (this.assistant) {
-        const summaryText =
-          `По формуле Миффлина-Сан Жеора: ${Math.round(mifflin)} ккал/день. ` +
-          `Белков: ${Math.round(protein)}г, Жиров: ${Math.round(fats)}г, ` +
-          `Углеводов: ${Math.round(carbs)}г.`;
-
-        this.sendActionValue("results", summaryText);
-        this.setFeedbackMessage("Расчет выполнен!");
-      }
+      );
     } catch (error) {
       logger.error("Error calculating results:", error);
+
+      if (this.assistant) {
+        this.sendActionValue(
+          "calculation_error",
+          "Произошла ошибка при расчете. Попробуйте еще раз.",
+        );
+      }
     }
   };
 
